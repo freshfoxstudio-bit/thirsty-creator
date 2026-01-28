@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Recipes() {
-  // Base drink list
+function Recipes({ userEmail }) {
   const baseDrinks = [
     { name: 'Virgin Mojito', ingredients: ['Mint', 'Lime', 'Soda Water', 'Sugar'] },
     { name: 'Sunset Cooler', ingredients: ['Orange Juice', 'Grenadine', 'Sparkling Water'] },
@@ -20,22 +19,18 @@ function Recipes() {
   // Generate random drinks list on page load
   useEffect(() => {
     const shuffled = [...allDrinks].sort(() => 0.5 - Math.random());
-    setRandomDrinks(shuffled.slice(0, 3)); // show 3 random drinks
+    setRandomDrinks(shuffled.slice(0, 3));
   }, [allDrinks]);
 
-  // Handle search
   const handleSearch = () => {
-    const found = allDrinks.find(
-      (d) => d.name.toLowerCase() === search.toLowerCase()
-    );
+    const found = allDrinks.find((d) => d.name.toLowerCase() === search.toLowerCase());
     if (found) setSelectedRecipe(found);
     else alert('No drink found!');
   };
 
-  // Handle custom drink creation
   const handleCustom = () => {
     if (!customName || !customIngredients) {
-      alert('Please enter name and ingredients (comma-separated)');
+      alert('Enter name & ingredients (comma-separated)');
       return;
     }
     const ingredientsArray = customIngredients.split(',').map((i) => i.trim());
@@ -45,6 +40,8 @@ function Recipes() {
     setCustomName('');
     setCustomIngredients('');
   };
+
+  const isAdmin = userEmail?.toLowerCase() === 'hcandlish2014@gmail.com';
 
   return (
     <div
@@ -60,12 +57,17 @@ function Recipes() {
         Your Fun Drink Generator!
       </h1>
 
-      {/* Link to admin page */}
-      <div style={{ marginBottom: '20px' }}>
-        <a href="/admin" style={{ color: '#FF6F61', fontWeight: 'bold', textDecoration: 'underline' }}>
-          Go to Admin Page
-        </a>
-      </div>
+      {/* Conditional Admin link */}
+      {isAdmin && (
+        <div style={{ marginBottom: '20px' }}>
+          <a
+            href="/admin"
+            style={{ color: '#FF6F61', fontWeight: 'bold', textDecoration: 'underline' }}
+          >
+            Go to Admin Page
+          </a>
+        </div>
+      )}
 
       {/* Search bar */}
       <div style={{ marginBottom: '30px' }}>
