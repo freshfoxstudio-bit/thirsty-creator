@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Signup() {
+function Signup({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [tab, setTab] = useState('signup'); // 'signup' or 'signin'
@@ -8,13 +8,16 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check for admin email
+    // Notify App of logged-in email
+    if (onLogin) onLogin(email);
+
+    // Admin check
     if (email.toLowerCase() === 'hcandlish2014@gmail.com') {
-      alert('Welcome Admin! Redirecting to admin page...');
-      window.location.href = '/admin'; // admin page route
-      return;
+      alert('Welcome Admin!');
+      return; // admin goes to Recipes page, sees admin link
     }
 
+    // Regular user alerts
     if (tab === 'signup') {
       alert(`Signed up with:\nEmail: ${email}\nPassword: ${password}`);
     } else {
