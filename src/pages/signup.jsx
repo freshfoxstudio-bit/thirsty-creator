@@ -3,11 +3,27 @@ import React, { useState } from 'react';
 function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [tab, setTab] = useState('signup'); // 'signup' or 'signin'
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Signed up with:\nEmail: ${email}\nPassword: ${password}`);
-    // Here you can add real authentication later
+
+    // Check for admin email
+    if (email.toLowerCase() === 'hcandlish2014@gmail.com') {
+      alert('Welcome Admin! Redirecting to admin page...');
+      window.location.href = '/admin'; // admin page route
+      return;
+    }
+
+    if (tab === 'signup') {
+      alert(`Signed up with:\nEmail: ${email}\nPassword: ${password}`);
+    } else {
+      alert(`Signed in with:\nEmail: ${email}\nPassword: ${password}`);
+    }
+
+    // Clear inputs
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -24,10 +40,51 @@ function Signup() {
         padding: '20px',
       }}
     >
-      <h1 style={{ fontSize: '3rem', color: '#FF6F61', textShadow: '2px 2px #FFD93D', marginBottom: '40px' }}>
-        Join Thirsty Creator!
+      <h1
+        style={{
+          fontSize: '3rem',
+          color: '#FF6F61',
+          textShadow: '2px 2px #FFD93D',
+          marginBottom: '20px',
+        }}
+      >
+        Thirsty Creator
       </h1>
 
+      {/* Tabs */}
+      <div style={{ marginBottom: '30px' }}>
+        <button
+          onClick={() => setTab('signup')}
+          style={{
+            padding: '10px 20px',
+            marginRight: '10px',
+            borderRadius: '10px',
+            border: 'none',
+            background: tab === 'signup' ? '#FF6F61' : '#FFD93D',
+            color: tab === 'signup' ? 'white' : '#333',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+          }}
+        >
+          Sign Up
+        </button>
+        <button
+          onClick={() => setTab('signin')}
+          style={{
+            padding: '10px 20px',
+            borderRadius: '10px',
+            border: 'none',
+            background: tab === 'signin' ? '#FF6F61' : '#FFD93D',
+            color: tab === 'signin' ? 'white' : '#333',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+          }}
+        >
+          Sign In
+        </button>
+      </div>
+
+      {/* Form */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -80,7 +137,7 @@ function Signup() {
             boxShadow: '0 0 10px #FFD93D',
           }}
         >
-          Sign Up / Sign In
+          {tab === 'signup' ? 'Sign Up' : 'Sign In'}
         </button>
       </form>
     </div>
