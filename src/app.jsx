@@ -1,41 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   useEffect(() => {
-    // Play the jingle automatically
     const audio = new Audio('/jinglemix.mp3');
     audio.play();
+
+    // When audio ends, redirect to sign up/sign in
+    audio.addEventListener('ended', () => {
+      window.location.href = '/signup'; // <-- change this if your sign in page is /signin
+    });
+
+    // Fallback in case audio doesn't play
+    const timeout = setTimeout(() => {
+      window.location.href = '/signup';
+    }, 20000); // max 20 seconds
+
+    return () => {
+      clearTimeout(timeout);
+      audio.pause();
+    };
   }, []);
 
+  if (!showSplash) return null;
+
+  // Splash screen
   return (
     <div
       style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        background: 'linear-gradient(135deg, #FFDEE9, #B5FFFC)',
+        flexDirection: 'column',
+        fontFamily: 'Comic Sans MS, sans-serif',
         textAlign: 'center',
-        marginTop: '50px',
-        background: 'linear-gradient(135deg, #FFDEE9, #B5FFFC)', // bright gradient
-        minHeight: '100vh',
-        padding: '20px',
-        color: '#333',
-        fontFamily: 'Comic Sans MS, sans-serif', // fun font
       }}
     >
-      <h1 style={{ fontSize: '3rem', color: '#FF6F61', textShadow: '2px 2px #FFD93D' }}>
-        Welcome to Thirsty Creator!
-      </h1>
-
       <img
         src="/freshfox-logo.png"
         alt="Logo"
         width="200"
-        style={{ margin: '20px', borderRadius: '20px', boxShadow: '0 0 20px #FFD93D' }}
+        style={{ marginBottom: '20px', borderRadius: '20px', boxShadow: '0 0 20px #FFD93D' }}
       />
-
-      <img
-        src="/drinks.png"
-        alt="Drinks"
-        width="300"
-        style={{ marginTop: '20px', borderRadius: '20px', boxShadow: '0 0 20px #FF6F61' }}
-      />
+      <h1 style={{ fontSize: '2.5rem', color: '#FF6F61', textShadow: '2px 2px #FFD93D' }}>
+        Welcome to Thirsty Creator!
+      </h1>
     </div>
   );
 }
