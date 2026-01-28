@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Signup from './pages/signup'; // lowercase import
+import Signup from './pages/signup';
+import Recipes from './pages/recipes';
+import Admin from './pages/admin';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [showSignup, setShowSignup] = useState(false);
+  const [loggedInEmail, setLoggedInEmail] = useState(null);
 
   useEffect(() => {
     const audio = new Audio('/jinglemix.mp3');
     audio.play();
 
-    // When audio ends, show signup page
+    // After jingle ends, show login/signup
     audio.addEventListener('ended', () => {
       setShowSplash(false);
-      setShowSignup(true);
     });
 
-    // Fallback in case audio doesn't play
-    const timeout = setTimeout(() => {
-      setShowSplash(false);
-      setShowSignup(true);
-    }, 20000); // max 20 seconds
+    const timeout = setTimeout(() => setShowSplash(false), 20000); // max 20s fallback
 
     return () => {
       clearTimeout(timeout);
@@ -28,7 +25,6 @@ function App() {
   }, []);
 
   if (showSplash) {
-    // Splash screen
     return (
       <div
         style={{
@@ -43,3 +39,30 @@ function App() {
         }}
       >
         <img
+          src="/freshfox-logo.png"
+          alt="Logo"
+          width="200"
+          style={{ marginBottom: '20px', borderRadius: '20px', boxShadow: '0 0 20px #FFD93D' }}
+        />
+        <h1 style={{ fontSize: '2.5rem', color: '#FF6F61', textShadow: '2px 2px #FFD93D' }}>
+          Welcome to Thirsty Creator!
+        </h1>
+      </div>
+    );
+  }
+
+  if (!loggedInEmail) {
+    // Show signup/login page
+    return <Signup onLogin={(email) => setLoggedInEmail(email)} />;
+  }
+
+  // Admin check
+  if (loggedInEmail.toLowerCase() === 'hcandlish2014@gmail.com') {
+    return <Recipes userEmail={loggedInEmail} />;
+  }
+
+  // Normal user
+  return <Recipes userEmail={loggedInEmail} />;
+}
+
+export default App;
